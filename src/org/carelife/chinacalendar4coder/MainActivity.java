@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -35,14 +37,13 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
 
 		if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
-			
+
 		} else {
-			
+
 		}
-		
+
 		date = (TextView) findViewById(R.id.calendar_date);
 		orientation = (TextView) findViewById(R.id.calendar_orientation_content);
 		drink = (TextView) findViewById(R.id.calendar_drink_content);
@@ -69,18 +70,20 @@ public class MainActivity extends Activity {
 
 		dataUtil = new DataUtil(MainActivity.this);
 		randomUtil = new RandomUtil();
-		
-		orientation.setText("面向"+dataUtil.directions[randomUtil
-				.randomInt(dataUtil.directions.length)]+"写程序，BUG 最少。");
-		drink.setText(dataUtil.drinks[randomUtil.randomInt(
-				dataUtil.drinks.length)]);
+
+		orientation
+				.setText("面向"
+						+ dataUtil.directions[randomUtil
+								.randomInt(dataUtil.directions.length)]
+						+ "写程序，BUG 最少。");
+		drink.setText(dataUtil.drinks[randomUtil
+				.randomInt(dataUtil.drinks.length)]);
 		peachIndex.setText(randomUtil.randomDouble() + "");
 
 		List<HashMap<String, String>> datagood = new ArrayList<HashMap<String, String>>();
 		for (int i = 0; i < 5; i++) {
 			HashMap<String, String> tmp = new HashMap<String, String>();
-			int index = randomUtil.randomInt(
-					dataUtil.activities.size());
+			int index = randomUtil.randomInt(dataUtil.activities.size());
 			String title = dataUtil.activities.get(index).get("name");
 			tmp.put("name", parseTitle(title));
 			tmp.put("content", dataUtil.activities.get(index).get("good"));
@@ -90,8 +93,7 @@ public class MainActivity extends Activity {
 		List<HashMap<String, String>> databad = new ArrayList<HashMap<String, String>>();
 		for (int i = 0; i < 5; i++) {
 			HashMap<String, String> tmp = new HashMap<String, String>();
-			int index = randomUtil.randomInt(
-					dataUtil.activities.size());
+			int index = randomUtil.randomInt(dataUtil.activities.size());
 			String title = dataUtil.activities.get(index).get("name");
 			tmp.put("name", parseTitle(title));
 			tmp.put("content", dataUtil.activities.get(index).get("bad"));
@@ -109,23 +111,42 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
+		menu.add(0, 0, 0, "分享");
 		return true;
 	}
 
 	private String parseTitle(String title) {
 		if (title.contains("%a")) {
-			String tool = dataUtil.tools[randomUtil.randomInt(
-					dataUtil.tools.length)];
+			String tool = dataUtil.tools[randomUtil
+					.randomInt(dataUtil.tools.length)];
 			title = title.replace("%a", tool);
 		} else if (title.contains("%b")) {
-			String var = dataUtil.varNames[randomUtil.randomInt(
-					dataUtil.varNames.length)];
+			String var = dataUtil.varNames[randomUtil
+					.randomInt(dataUtil.varNames.length)];
 			title = title.replace("%b", var);
 		} else if (title.contains("%c")) {
 			int number = randomUtil.randomInt(10000);
 			title = title.replace("%b", number + "");
 		}
 		return title;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case 0:
+			Intent intent = new Intent(Intent.ACTION_SEND);
+
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_SUBJECT, "分享");
+			intent.putExtra(Intent.EXTRA_TEXT,
+					"I would like to share this with you...");
+		    //File file = new File(photoUri); 
+		    //intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file)); 
+		    //intent.setType("image/jpeg"); 
+		    startActivity(Intent.createChooser(intent, getTitle()));
+			return true;
+		}
+		return false;
 	}
 
 	private class MyListAdapter extends BaseAdapter {
