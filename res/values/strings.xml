@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">程序员老黄历</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">程序员老黄历</string>
+    <string name="good">宜</string>
+    <string name="bad">不宜</string>
+    <string name="orientation">座位方向: </string>
+    <string name="drink">今日宜饮: </string>
+    <string name="peachindex">女神亲近指数: </string>
+    
+</resources>
